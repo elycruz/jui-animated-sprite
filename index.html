@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+        .running-cat-sprite {
+            position: relative;
+            background: url(runningcat.png) no-repeat;
+            width: 512px;
+            height: 256px;
+        }
+        .explosion {
+            position: relative;
+            background: url(explosion-sprite.png) no-repeat;
+            width: 96px;
+            height: 96px;
+        }
+        .goddess-athena {
+            position: relative;
+            background: url("Arcade - King of Fighters 2000 The - Goddess Athena.png") no-repeat;
+            width: 96px;
+            height: 96px;
+        }
+    </style>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/ui/core.js"></script>
+    <script src="bower_components/jquery-ui/ui/widget.js"></script>
+    <script src="bower_components/gsap/src/minified/TweenMax.min.js"></script>
+    <script src="bower_components/sjljs/sjl-minimal.js"></script>
+    <script src="bower_components/jui-commons/distro/js/jui-commons.min.js"></script>
+    <script src="jquery.juiAnimatedSprite.js"></script>
+    <script>
+        $(function () {
+            $('.running-cat-sprite').juiAnimatedSprite({
+                duration: 1
+            });
+            $('.explosion').juiAnimatedSprite({
+                spriteSheetWidth: 480,
+                spriteSheetHeight: 288,
+                frameWidth: 96,
+                frameHeight: 96,
+                duration: 0.6
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <h3>Sprite example</h3>
+    <div class="explosion"></div>
+    <div class="running-cat-sprite"></div>
+    <div class="goddess-athena"></div>
+</div>
+</body>
+</html>

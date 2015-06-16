@@ -1,0 +1,24 @@
+{
+  "name": "jui-animated-sprite",
+  "main": "index.js",
+  "version": "0.0.0",
+  "authors": [
+    "Ely De La Cruz <elycruz@elycruz.com>"
+  ],
+  "description": "TweenMax Animated Sprite",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jui-commons": "elycruz/jui-commons#~0.2.50",
+    "jquery": "~2.1.4",
+    "jquery-ui": "~1.11.4",
+    "gsap": "~1.17.0",
+    "sjljs": "elycruz/sjljs#~0.4.80"
+  }
+}
