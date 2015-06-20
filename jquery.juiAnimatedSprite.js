@@ -17,19 +17,14 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         _currFrame: 0
     },
 
-    _create: function () {
+    _init: function () {
         var self = this,
             ops = self.options,
             timeline = self.gsapTimeline();
         if (ops.autoCalcFrames) {
             self._autoCalculateFrames(self, ops);
         }
-        self._defineAnimation(self, self.element, ops, timeline)
-        .play();
-
-    },
-
-    _init: function () {
+        self._defineAnimation(self, self.element, ops, timeline);
     },
 
     _defineAnimation: function (self, $selfElm, ops, timeline) {
@@ -47,9 +42,11 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     },
 
     _autoCalculateFrames: function (self, ops) {
+
+        self._ensureFrameDims(self, ops);
+
         var numRows = ops._numRows = Math.ceil(ops.spriteSheetHeight / ops.frameHeight),
             numCols = ops._numCols = Math.ceil(ops.spriteSheetWidth / ops.frameWidth),
-            //numFrames = ops._numFrames = Math.ceil(ops._numRows * ops._numCols),
             i, j,
             yPart = '',
             xPart = '';
@@ -67,42 +64,19 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         return self;
     },
 
-    play: function () {
+    _ensureFrameDims: function (self, ops) {
+        if (ops.frameWidth === null) {
+            ops.frameWidth = self.element.width();
+        }
+        if (ops.frameHeight === null) {
+            ops.frameHeight = self.element.height();
+        }
+        return self;
+    },
 
+    play: function () {
+        this.gsapTimeline().play();
+        return this;
     }
 
-})
-
-//var boxyObj1 = {counter: 0};
-//var boxyArray1 = ["-160px -160px", "-320px -160px", "-480px -160px", "-640px -160px", "-800px -160px", "-960px -160px", "-1120px -160px"];
-//
-//var TweenBoxy = TweenMax.to(boxyObj1, 0.5, {
-//    counter: boxyArray1.length,
-//    repeat: -1,
-//    ease: SteppedEase.config(boxyArray1.length),
-//    onUpdate: boxyTweenUpdate
-//});
-//
-//function boxyTweenUpdate() {
-//    if (boxyObj1.counter < boxyArray1.length) {
-//        TweenMax.to(boxy, 0, {backgroundPosition: boxyArray1[Math.ceil(boxyObj1.counter)]});
-//    }
-//}
-//
-//document.getElementById('mybtn1').onclick = function () {
-//    TweenBoxy.play();
-//}
-//document.getElementById('mybtn2').onclick = function () {
-//    TweenBoxy.reverse();
-//}
-//
-//
-//document.getElementById('mybtn3').onclick = function () {
-//    TweenBoxy.timeScale(0.25);
-//}
-//document.getElementById('mybtn4').onclick = function () {
-//    TweenBoxy.timeScale(1);
-//}
-//document.getElementById('mybtn5').onclick = function () {
-//    TweenBoxy.timeScale(3);
-//}
+});

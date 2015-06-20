@@ -17,11 +17,17 @@
             width: 96px;
             height: 96px;
         }
-        .goddess-athena {
+        .running-cartoon {
             position: relative;
-            background: url("Arcade - King of Fighters 2000 The - Goddess Athena.png") no-repeat;
-            width: 96px;
-            height: 96px;
+            background: url("running.png") no-repeat;
+            width: 180px;
+            height: 247.5px;
+        }
+        .spinning-icon {
+            position: relative;
+            background: url("fig3-8_SampleSpriteSheet.png") no-repeat;
+            width: 74.3px;
+            height: 73.5px;
         }
     </style>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -34,7 +40,9 @@
     <script>
         $(function () {
             $('.running-cat-sprite').juiAnimatedSprite({
-                duration: 1
+                spriteSheetWidth: 1024,
+                spriteSheetHeight: 1024,
+                duration: 0.3
             });
             $('.explosion').juiAnimatedSprite({
                 spriteSheetWidth: 480,
@@ -42,6 +50,20 @@
                 frameWidth: 96,
                 frameHeight: 96,
                 duration: 0.6
+            });
+            $('.running-cartoon').juiAnimatedSprite({
+                spriteSheetWidth: 900,
+                spriteSheetHeight: 495,
+                frameWidth: 180,
+                frameHeight: 247.5,
+                duration: 0.6
+            });
+            $('.spinning-icon').juiAnimatedSprite({
+                spriteSheetWidth: 446,
+                spriteSheetHeight: 588,
+                frameWidth: 74.3,
+                frameHeight: 73.5,
+                duration: 3
             });
         });
     </script>
@@ -51,7 +73,8 @@
     <h3>Sprite example</h3>
     <div class="explosion"></div>
     <div class="running-cat-sprite"></div>
-    <div class="goddess-athena"></div>
+    <div class="running-cartoon"></div>
+    <div class="spinning-icon"></div>
 </div>
 </body>
 </html>
