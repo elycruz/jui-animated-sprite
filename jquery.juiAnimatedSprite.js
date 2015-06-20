@@ -11,6 +11,7 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         posArray: [],
         counter: 0,
         duration: 3,
+        repeat: -1,
         _numColumns: 0,
         _numRows: 0,
         _numFrames: 0,
@@ -30,7 +31,7 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     _defineAnimation: function (self, $selfElm, ops, timeline) {
         timeline.to(ops, ops.duration, {
             counter: ops.posArray.length,
-            repeat: -1,
+            repeat: ops.repeat,
             ease: SteppedEase.config(ops.posArray.length),
             onUpdate: function () {
                 if (ops.counter < ops.posArray.length) {
