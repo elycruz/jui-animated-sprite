@@ -12,7 +12,7 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         posArray: [],
         counter: 0,
         duration: 3,
-        repeat: -1,
+        repeat: 0,
         _numColumns: 0,
         _numRows: 0,
         _numFrames: 0,
@@ -24,7 +24,9 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
             ops = self.options,
             timeline = self.gsapTimeline();
 
-        self.clearGsapTimeline(timeline);
+        // Ensure timeline is empty (incase user has called this plugin again after initialization without any options).
+        timeline.clear()
+                .eventCallback('onUpdate', null);
 
         if (ops.autoCalcFrames) {
             self._autoCalculateFrames(self, ops);
@@ -47,7 +49,6 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     },
 
     _autoCalculateFrames: function (self, ops) {
-
         self._ensureFrameDims(self, ops);
 
         var numRows = ops._numRows = Math.ceil(ops.spriteSheetHeight / ops.frameHeight),
@@ -77,13 +78,6 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
             ops.frameHeight = self.element.height();
         }
         return self;
-    },
-
-    clearGsapTimeline: function (timeline) {
-        timeline
-            .clear()
-            .eventCallback('onUpdate', null);
-        return this;
     },
 
     timeline: function (timeline) {

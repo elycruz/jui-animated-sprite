@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>Jui Animated Sprite Examples</title>
     <style>
         .running-cat-sprite {
             position: relative;
@@ -21,9 +21,6 @@
             margin-right: 5px;
             padding: 5px;
         }
-        .play-btn.playing {
-            content: "Pause";
-        }
     </style>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/jquery-ui/ui/core.js"></script>
@@ -40,33 +37,27 @@
              * @param $exampleWrapper {jQuery} - The example's wrapper element
              * @param $spriteElm {jquery.juiAnimatedSprite} - The initiated juiAnimatedSprite element.
              */
-            function registerExample ($exampleWrapper, $spriteElm, config) {
+            function registerExample ($exampleWrapper, $spriteElm) {
 
-                // Initialize animated sprite
-                $spriteElm = $spriteElm.juiAnimatedSprite(config);
-
-                // Capture some of the examples elements for use later
+                // Capture some of the example's elements for use later
                 var $seekInput = $exampleWrapper.find('.js-seek'),
                     $playBtn = $exampleWrapper.find('.js-play.btn'),
                     $timeScaleElm = $exampleWrapper.find('.js-timescale'),
-                    timeline = $spriteElm.juiAnimatedSprite('gsapTimeline');
+                    timeline = $spriteElm.juiAnimatedSprite('timeline');
 
-                // Put timeline event callbacks in a function for reuse later
-                function registerTimelineCallbacks () {
-                    // On update the seek input should show current play progress
-                    timeline.eventCallback('onUpdate', function (timeline) {
-                        $seekInput.val(timeline.time());
-                    }, ['{self}']);
+                // On timeline update the seek input should show current play progress
+                timeline.eventCallback('onUpdate', function () {
+                    $seekInput.val(timeline.time());
+                }, ['{self}']);
 
-                    // On complete event
-                    timeline.eventCallback('onComplete', function (timeline) {
-                        if (timeline.repeat() === -1) {
-                            return;
-                        }
-                        $playBtn.toggleClass('playing')
-                                .text('Play');
-                    }, ['{self}']);
-                }
+                // On timeline complete event
+                timeline.eventCallback('onComplete', function () {
+                    if (timeline.repeat() === -1) {
+                        return;
+                    }
+                    $playBtn.toggleClass('playing')
+                            .text('Play');
+                }, ['{self}']);
 
                 // Stop any form submittals on the examples
                 $exampleWrapper.find('form').eq(0).submit(function () {
@@ -104,7 +95,8 @@
                         $elm.text('Loop');
                         $spriteElm.juiAnimatedSprite('repeat', 0);
                     }
-                    registerTimelineCallbacks();
+                    $spriteElm.juiAnimatedSprite('play');
+                    $playBtn.addClass('playing').text('Pause');
                 });
 
                 // Seek input
@@ -115,25 +107,25 @@
                     }).change(function () {
                         $spriteElm.juiAnimatedSprite('seek', $(this).val());
                     });
-
-                registerTimelineCallbacks();
             }
 
             // Explosion example
-            registerExample($('.example-1'), $('.explosion.example'), {
+            registerExample($('.example-1'), $('.explosion.example').juiAnimatedSprite({
                 spriteSheetWidth: 480,
                 spriteSheetHeight: 288,
                 frameWidth: 96,
                 frameHeight: 96,
-                duration: 0.6
-            });
+                duration: 0.6,
+                repeat: 0
+            }));
 
             // Running cat example
-            registerExample($('.example-2'), $('.running-cat-sprite.example'), {
+            registerExample($('.example-2'), $('.running-cat-sprite.example').juiAnimatedSprite({
                 spriteSheetWidth: 1024,
                 spriteSheetHeight: 1024,
-                duration: 0.3
-            });
+                duration: 0.3,
+                repeat: 0
+            }));
 
         });
     </script>
