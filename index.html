@@ -37,7 +37,7 @@
              * @param $exampleWrapper {jQuery} - The example's wrapper element
              * @param $spriteElm {jquery.juiAnimatedSprite} - The initiated juiAnimatedSprite element.
              */
-            function registerExample ($exampleWrapper, $spriteElm) {
+            function registerExampleControls ($exampleWrapper, $spriteElm) {
 
                 // Capture some of the example's elements for use later
                 var $seekInput = $exampleWrapper.find('.js-seek'),
@@ -110,7 +110,7 @@
             }
 
             // Explosion example
-            registerExample($('.example-1'), $('.explosion.example').juiAnimatedSprite({
+            registerExampleControls($('.example-1'), $('.explosion.example').juiAnimatedSprite({
                 spriteSheetWidth: 480,
                 spriteSheetHeight: 288,
                 frameWidth: 96,
@@ -120,7 +120,7 @@
             }));
 
             // Running cat example
-            registerExample($('.example-2'), $('.running-cat-sprite.example').juiAnimatedSprite({
+            registerExampleControls($('.example-2'), $('.running-cat-sprite.example').juiAnimatedSprite({
                 spriteSheetWidth: 1024,
                 spriteSheetHeight: 1024,
                 duration: 0.3,
