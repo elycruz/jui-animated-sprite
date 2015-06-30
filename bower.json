@@ -15,10 +15,13 @@
     "tests"
   ],
   "dependencies": {
-    "jui-commons": "elycruz/jui-commons#~0.2.50",
+    "jui-commons": "elycruz/jui-commons#~0.2.22",
     "jquery": "~2.1.4",
     "jquery-ui": "~1.11.4",
     "gsap": "~1.17.0",
     "sjljs": "elycruz/sjljs#~0.4.80"
+  },
+  "resolutions": {
+    "jui-commons": "0.2.22"
   }
 }

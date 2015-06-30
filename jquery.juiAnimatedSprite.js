@@ -3,11 +3,12 @@
  */
 $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     options: {
-        spriteSheetWidth: 1024,
-        spriteSheetHeight: 1024,
-        frameWidth: 512,
-        frameHeight: 256,
+        spriteSheetWidth: null,
+        spriteSheetHeight: null,
+        frameWidth: null,
+        frameHeight: null,
         autoCalcFrames: true,
+        gsapTimelineConstructor: TimelineMax,
         posArray: [],
         counter: 0,
         duration: 3,
@@ -22,6 +23,9 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         var self = this,
             ops = self.options,
             timeline = self.gsapTimeline();
+
+        self.clearGsapTimeline(timeline);
+
         if (ops.autoCalcFrames) {
             self._autoCalculateFrames(self, ops);
         }
@@ -75,6 +79,13 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         return self;
     },
 
+    clearGsapTimeline: function (timeline) {
+        timeline
+            .clear()
+            .eventCallback('onUpdate', null);
+        return this;
+    },
+
     timeline: function (timeline) {
         return this.gsapTimeline(timeline);
     },
@@ -84,8 +95,30 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     },
 
     play: function () {
-        this.gsapTimeline().play();
+        var timeline = this.gsapTimeline();
+        if (timeline.repeat() !== -1 && timeline.duration() === timeline.time()) {
+            timeline.restart();
+        }
+        else {
+            timeline.play();
+        }
         return this;
+    },
+
+    repeat: function (value) {
+        var retVal = this,
+            isGetterCall = typeof value === 'undefined';
+        if (isGetterCall) {
+            retVal = this.gsapTimeline().repeat();
+        }
+        else {
+            this.gsapTimeline().repeat(parseFloat(value));
+        }
+        return retVal;
+    },
+
+    pause: function () {
+        return this.stop();
     },
 
     stop: function () {
@@ -94,16 +127,17 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
     },
 
     seek: function (position, suppressEvents) {
-        var classOfPosition = sjl.classOf(position);
-        if (classOfPosition === 'Number') {
-            console.warn(this.widgetFullName + '.seek expects it\'s `position` parameter to be of type "Number".  ' +
-                'Value and type received: position: "' + position +
-                '", type of position: "' + classOfPosition + '".  Defaulting to position "0".');
-        }
-        position = classOfPosition === 'Number' ? position : 0;
+        position = parseFloat(position);
         suppressEvents = suppressEvents || true;
         this.gsapTimeline().seek(position, suppressEvents);
         return this;
+    },
+
+    destroy: function () {
+        this.gsapTimeline()
+            .pause()
+            .clear();
+        this._super();
     }
 
 });

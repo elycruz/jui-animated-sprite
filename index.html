@@ -40,17 +40,46 @@
              * @param $exampleWrapper {jQuery} - The example's wrapper element
              * @param $spriteElm {jquery.juiAnimatedSprite} - The initiated juiAnimatedSprite element.
              */
-            function registerExample ($exampleWrapper, $spriteElm) {
+            function registerExample ($exampleWrapper, $spriteElm, config) {
+
+                // Initialize animated sprite
+                $spriteElm = $spriteElm.juiAnimatedSprite(config);
+
+                // Capture some of the examples elements for use later
                 var $seekInput = $exampleWrapper.find('.js-seek'),
-                    gsapTimeline = $spriteElm.juiAnimatedSprite('timeline');
+                    $playBtn = $exampleWrapper.find('.js-play.btn'),
+                    $timeScaleElm = $exampleWrapper.find('.js-timescale'),
+                    timeline = $spriteElm.juiAnimatedSprite('gsapTimeline');
+
+                // Put timeline event callbacks in a function for reuse later
+                function registerTimelineCallbacks () {
+                    // On update the seek input should show current play progress
+                    timeline.eventCallback('onUpdate', function (timeline) {
+                        $seekInput.val(timeline.time());
+                    }, ['{self}']);
+
+                    // On complete event
+                    timeline.eventCallback('onComplete', function (timeline) {
+                        if (timeline.repeat() === -1) {
+                            return;
+                        }
+                        $playBtn.toggleClass('playing')
+                                .text('Play');
+                    }, ['{self}']);
+                }
 
                 // Stop any form submittals on the examples
                 $exampleWrapper.find('form').eq(0).submit(function () {
                     return false;
                 });
 
+                // Listen to timescale change
+                $timeScaleElm.change(function () {
+                    timeline.timeScale(parseFloat($(this).val()));
+                });
+
                 // Play btn
-                $exampleWrapper.find('.js-play.btn').click(function () {
+                $playBtn.click(function () {
                     var $elm = $(this);
                     $elm.toggleClass('playing');
                     if ($elm.hasClass('playing')) {
@@ -63,9 +92,19 @@
                     }
                 });
 
-                // Stop btn
-                $exampleWrapper.find('.js-stop.btn').click(function () {
-                    $spriteElm.juiAnimatedSprite('stop');
+                // Loop btn
+                $exampleWrapper.find('.js-loop.btn').click(function () {
+                    var $elm = $(this);
+                    $elm.toggleClass('looping');
+                    if ($elm.hasClass('looping')) {
+                        $elm.text('No-Loop');
+                        $spriteElm.juiAnimatedSprite('repeat', -1);
+                    }
+                    else {
+                        $elm.text('Loop');
+                        $spriteElm.juiAnimatedSprite('repeat', 0);
+                    }
+                    registerTimelineCallbacks();
                 });
 
                 // Seek input
@@ -73,27 +112,28 @@
                         min: 0,
                         max: $spriteElm.juiAnimatedSprite('option', 'duration'),
                         step: 0.001
-                    })
-                    .change(function () {
-                        console.log('Seek button: ', $(this).val());
+                    }).change(function () {
+                        $spriteElm.juiAnimatedSprite('seek', $(this).val());
                     });
+
+                registerTimelineCallbacks();
             }
 
             // Explosion example
-            registerExample($('.example-1'), $('.explosion.example').juiAnimatedSprite({
+            registerExample($('.example-1'), $('.explosion.example'), {
                 spriteSheetWidth: 480,
                 spriteSheetHeight: 288,
                 frameWidth: 96,
                 frameHeight: 96,
                 duration: 0.6
-            }));
+            });
 
             // Running cat example
-            registerExample($('.example-2'), $('.running-cat-sprite.example').juiAnimatedSprite({
+            registerExample($('.example-2'), $('.running-cat-sprite.example'), {
                 spriteSheetWidth: 1024,
                 spriteSheetHeight: 1024,
                 duration: 0.3
-            }));
+            });
 
         });
     </script>
@@ -106,16 +146,29 @@
         <div class="explosion example"></div>
         <form action="#">
             <div class="form-item">
-                <button class="btn js-play">Play</button>
+                <button class="btn js-play playing">Pause</button>
             </div>
             <div class="form-item">
-                <button class="btn js-stop">Stop</button>
+                <button class="btn js-loop">Loop</button>
             </div>
             <div class="form-item">
                 <label>Seek</label>
             </div>
             <div class="form-item">
                 <input class="js-seek" type="range" />
+            </div>
+            <div class="form-item">
+                <select class="js-timescale">
+                    <option value="0.1">0.1x</option>
+                    <option value="0.3">0.3x</option>
+                    <option value="0.5">0.5x</option>
+                    <option value="0.8">0.8x</option>
+                    <option value="1" selected="selected">1x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                    <option value="4">4x</option>
+                    <option value="5">5x</option>
+                </select>
             </div>
         </form>
     </div>
@@ -126,16 +179,29 @@
         <div class="running-cat-sprite example"></div>
         <form  action="#">
             <div class="form-item">
-                <button class="btn js-play play-btn">Play</button>
+                <button class="btn js-play play-btn playing">Pause</button>
             </div>
             <div class="form-item">
-                <button class="btn js-stop">Stop</button>
+                <button class="btn js-loop">Loop</button>
             </div>
             <div class="form-item">
                 <label>Seek</label>
             </div>
             <div class="form-item">
                 <input class="js-seek" type="range" />
+            </div>
+            <div class="form-item">
+                <select class="js-timescale">
+                    <option value="0.1">0.1x</option>
+                    <option value="0.3">0.3x</option>
+                    <option value="0.5">0.5x</option>
+                    <option value="0.8">0.8x</option>
+                    <option value="1" selected="selected">1x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                    <option value="4">4x</option>
+                    <option value="5">5x</option>
+                </select>
             </div>
         </form>
     </div>
