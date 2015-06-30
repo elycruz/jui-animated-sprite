@@ -75,8 +75,34 @@ $.widget('jui.juiAnimatedSprite', $.jui.juiBase, {
         return self;
     },
 
+    timeline: function (timeline) {
+        return this.gsapTimeline(timeline);
+    },
+
+    gsapTimeline: function (timeline) {
+        return this._timeline(timeline, 'timeline', this.options);
+    },
+
     play: function () {
         this.gsapTimeline().play();
+        return this;
+    },
+
+    stop: function () {
+        this.gsapTimeline().pause();
+        return this;
+    },
+
+    seek: function (position, suppressEvents) {
+        var classOfPosition = sjl.classOf(position);
+        if (classOfPosition === 'Number') {
+            console.warn(this.widgetFullName + '.seek expects it\'s `position` parameter to be of type "Number".  ' +
+                'Value and type received: position: "' + position +
+                '", type of position: "' + classOfPosition + '".  Defaulting to position "0".');
+        }
+        position = classOfPosition === 'Number' ? position : 0;
+        suppressEvents = suppressEvents || true;
+        this.gsapTimeline().seek(position, suppressEvents);
         return this;
     }
 

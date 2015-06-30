@@ -16,6 +16,14 @@
             width: 96px;
             height: 96px;
         }
+        .form-item {
+            display: inline-block;
+            margin-right: 5px;
+            padding: 5px;
+        }
+        .play-btn.playing {
+            content: "Pause";
+        }
     </style>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/jquery-ui/ui/core.js"></script>
@@ -26,40 +34,111 @@
     <script src="jquery.juiAnimatedSprite.js"></script>
     <script>
         $(function () {
-            $('.running-cat-sprite').juiAnimatedSprite({
-                spriteSheetWidth: 1024,
-                spriteSheetHeight: 1024,
-                duration: 0.3
-            });
-            $('.explosion').juiAnimatedSprite({
+
+            /**
+             * Adds event listeners for the form controls on the example wrapper element passed in.
+             * @param $exampleWrapper {jQuery} - The example's wrapper element
+             * @param $spriteElm {jquery.juiAnimatedSprite} - The initiated juiAnimatedSprite element.
+             */
+            function registerExample ($exampleWrapper, $spriteElm) {
+                var $seekInput = $exampleWrapper.find('.js-seek'),
+                    gsapTimeline = $spriteElm.juiAnimatedSprite('timeline');
+
+                // Stop any form submittals on the examples
+                $exampleWrapper.find('form').eq(0).submit(function () {
+                    return false;
+                });
+
+                // Play btn
+                $exampleWrapper.find('.js-play.btn').click(function () {
+                    var $elm = $(this);
+                    $elm.toggleClass('playing');
+                    if ($elm.hasClass('playing')) {
+                        $elm.text('Pause');
+                        $spriteElm.juiAnimatedSprite('play');
+                    }
+                    else {
+                        $elm.text('Play');
+                        $spriteElm.juiAnimatedSprite('stop');
+                    }
+                });
+
+                // Stop btn
+                $exampleWrapper.find('.js-stop.btn').click(function () {
+                    $spriteElm.juiAnimatedSprite('stop');
+                });
+
+                // Seek input
+                $seekInput.attr({
+                        min: 0,
+                        max: $spriteElm.juiAnimatedSprite('option', 'duration'),
+                        step: 0.001
+                    })
+                    .change(function () {
+                        console.log('Seek button: ', $(this).val());
+                    });
+            }
+
+            // Explosion example
+            registerExample($('.example-1'), $('.explosion.example').juiAnimatedSprite({
                 spriteSheetWidth: 480,
                 spriteSheetHeight: 288,
                 frameWidth: 96,
                 frameHeight: 96,
                 duration: 0.6
-            });
-            $('.running-cartoon').juiAnimatedSprite({
-                spriteSheetWidth: 900,
-                spriteSheetHeight: 495,
-                frameWidth: 180,
-                frameHeight: 247.5,
-                duration: 0.6
-            });
-            $('.spinning-icon').juiAnimatedSprite({
-                spriteSheetWidth: 446,
-                spriteSheetHeight: 588,
-                frameWidth: 74.3,
-                frameHeight: 73.5,
-                duration: 3
-            });
+            }));
+
+            // Running cat example
+            registerExample($('.example-2'), $('.running-cat-sprite.example').juiAnimatedSprite({
+                spriteSheetWidth: 1024,
+                spriteSheetHeight: 1024,
+                duration: 0.3
+            }));
+
         });
     </script>
 </head>
 <body>
-<div>
-    <h3>Sprite example</h3>
-    <div class="explosion"></div>
-    <div class="running-cat-sprite"></div>
-</div>
+
+    <!-- Example 1 -->
+    <div class="example-1">
+        <h3>Animated Sprite Example 1</h3>
+        <div class="explosion example"></div>
+        <form action="#">
+            <div class="form-item">
+                <button class="btn js-play">Play</button>
+            </div>
+            <div class="form-item">
+                <button class="btn js-stop">Stop</button>
+            </div>
+            <div class="form-item">
+                <label>Seek</label>
+            </div>
+            <div class="form-item">
+                <input class="js-seek" type="range" />
+            </div>
+        </form>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example-2">
+        <h3>Animated Sprite Example 2</h3>
+        <div class="running-cat-sprite example"></div>
+        <form  action="#">
+            <div class="form-item">
+                <button class="btn js-play play-btn">Play</button>
+            </div>
+            <div class="form-item">
+                <button class="btn js-stop">Stop</button>
+            </div>
+            <div class="form-item">
+                <label>Seek</label>
+            </div>
+            <div class="form-item">
+                <input class="js-seek" type="range" />
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
